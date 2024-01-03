@@ -1,50 +1,15 @@
-import styled from "styled-components";
-
-const cellColor = "#29a83f";
-const cellSize = 70;
-
-const SCell = styled.div`
-  width: ${cellSize}px;
-  height: ${cellSize}px;
-  background-color: ${cellColor};
-  border: 1px solid black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const SPiece = styled.div`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-`;
-
-const SBlackPiece = styled(SPiece)`
-  background-color: black;
-`;
-
-const SWhitePiece = styled(SPiece)`
-  background-color: white;
-`;
-
-const renderPiece = (cell: string) => {
-  if (cell === "BLACK") {
-    return <SBlackPiece />;
-  } else if (cell === "WHITE") {
-    return <SWhitePiece />;
-  }
-  return null;
-};
+import Cell from "./Cell";
+import CellState from "./CellState";
 
 const Board = () => {
   const board = Array(8)
     .fill(null)
-    .map(() => Array(8).fill("EMPTY"));
+    .map(() => Array(8).fill(CellState.Empty));
 
-  board[3][3] = "BLACK";
-  board[3][4] = "WHITE";
-  board[4][3] = "WHITE";
-  board[4][4] = "BLACK";
+  board[3][3] = CellState.Black;
+  board[3][4] = CellState.White;
+  board[4][3] = CellState.White;
+  board[4][4] = CellState.Black;
 
   console.log(board);
 
@@ -53,9 +18,7 @@ const Board = () => {
       {[...Array(8)].map((_, rowIndex) => (
         <div key={rowIndex} style={{ display: "flex" }}>
           {[...Array(8)].map((_, cellIndex) => (
-            <SCell key={cellIndex}>
-              {renderPiece(board[rowIndex][cellIndex])}
-            </SCell>
+            <Cell key={cellIndex} state={board[rowIndex][cellIndex]} />
           ))}
         </div>
       ))}
