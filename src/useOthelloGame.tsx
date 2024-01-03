@@ -21,20 +21,20 @@ const initializeBoard = (): CellModel[][] => {
   return board;
 };
 
-function checkPutableCells(board: CellModel[][], currentPlayer: PieceModel) {
+const checkPutableCells = (board: CellModel[][], currentPlayer: PieceModel) => {
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[0].length; j++) {
       checkPutableCell(board, currentPlayer, i, j);
     }
   }
-}
+};
 
-function checkPutableCell(
+const checkPutableCell = (
   board: CellModel[][],
   currentPlayer: PieceModel,
   rowIndex: number,
   cellIndex: number
-) {
+) => {
   let cell = board[rowIndex][cellIndex];
   // セルが空でない場合、そこにはコマを置けない
   if (cell.piece !== PieceModel.None) {
@@ -58,11 +58,11 @@ function checkPutableCell(
 
   cell.canPut = false;
   return;
-}
+};
 
-function getOpponent(player: PieceModel): PieceModel {
+const getOpponent = (player: PieceModel): PieceModel => {
   return player === PieceModel.Black ? PieceModel.White : PieceModel.Black;
-}
+};
 
 export const useOthelloGame = () => {
   const [board, setBoard] = useState<CellModel[][]>(initializeBoard);
