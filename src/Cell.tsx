@@ -15,8 +15,18 @@ const SCell = styled.div`
   align-items: center;
 `;
 
-const Cell = ({ state }: { state: CellState }) => {
-  return <SCell>{state !== CellState.Empty && <Piece state={state} />}</SCell>;
+const Cell = ({
+  state,
+  onClick,
+}: {
+  state: CellState;
+  onClick: () => void;
+}) => {
+  return (
+    <SCell onClick={onClick}>
+      {state !== CellState.Empty && <Piece state={state} />}
+    </SCell>
+  );
 };
 
 export default Cell;
