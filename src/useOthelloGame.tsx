@@ -48,9 +48,10 @@ const setCanPutToCell = (
     [1, -1],
   ];
 
-  cell.canPut = directions.some((direction) =>
+  let canPut = directions.some((direction) =>
     canPutToDirection(board, currentPlayer, rowIndex, cellIndex, direction)
   );
+  cell.setCanPut(canPut);
 };
 
 const canPutToDirection = (
@@ -100,7 +101,7 @@ export const useOthelloGame = () => {
   const handleCellClick = (rowIndex: number, cellIndex: number) => {
     setBoard((prevBoard) => {
       let prevCell = prevBoard[rowIndex][cellIndex];
-      if (prevCell.piece === PieceModel.None && prevCell.canPut) {
+      if (prevCell.piece === PieceModel.None && prevCell.getCanPut()) {
         let newBoard = prevBoard.map((row) => [...row]);
         newBoard[rowIndex][cellIndex].piece = PieceModel.Black;
         return newBoard;

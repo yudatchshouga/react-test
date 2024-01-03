@@ -23,7 +23,7 @@ const SCell = styled.div<{ color: string }>`
 `;
 
 const Cell: React.FC<CellProps> = ({ cell, onClick }) => {
-  const color = cell.canPut ? canPutColor : defaultColor;
+  const color = cell.getCanPut() ? canPutColor : defaultColor;
   return (
     <SCell onClick={onClick} color={color}>
       {cell.piece !== PieceModel.None && <Piece piece={cell.piece} />}
