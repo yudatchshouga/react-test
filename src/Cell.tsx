@@ -16,7 +16,7 @@ const SCell = styled.div`
 `;
 
 const Cell = ({ state }: { state: CellState }) => {
-  return <SCell>{state !== CellState.Empty && <Piece color={state} />}</SCell>;
+  return <SCell>{state !== CellState.Empty && <Piece state={state} />}</SCell>;
 };
 
 export default Cell;
