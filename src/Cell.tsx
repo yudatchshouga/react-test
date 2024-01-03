@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import CellState from "./CellState";
+import Piece from "./Piece";
 
 const cellColor = "#29a83f";
 const cellSize = 70;
@@ -14,30 +15,8 @@ const SCell = styled.div`
   align-items: center;
 `;
 
-const SPiece = styled.div`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-`;
-
-const SBlackPiece = styled(SPiece)`
-  background-color: black;
-`;
-const SWhitePiece = styled(SPiece)`
-  background-color: white;
-`;
-
 const Cell = ({ state }: { state: CellState }) => {
-  const renderPiece = () => {
-    if (state === CellState.Black) {
-      return <SBlackPiece />;
-    } else if (state === CellState.White) {
-      return <SWhitePiece />;
-    }
-    return null;
-  };
-
-  return <SCell>{renderPiece()}</SCell>;
+  return <SCell>{state !== CellState.Empty && <Piece color={state} />}</SCell>;
 };
 
 export default Cell;
