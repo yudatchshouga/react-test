@@ -5,16 +5,20 @@ import CellState from "./CellState";
 type BoardProps = {};
 
 const Board: React.FC<BoardProps> = () => {
-  const [board, setBoard] = useState<CellState[][]>(() =>
-    Array(8)
+  const initializeBoard = (): CellState[][] => {
+    const board = Array(8)
       .fill(null)
-      .map(() => Array(8).fill(CellState.Empty))
-  );
+      .map(() => Array(8).fill(CellState.Empty));
 
-  board[3][3] = CellState.Black;
-  board[3][4] = CellState.White;
-  board[4][3] = CellState.White;
-  board[4][4] = CellState.Black;
+    board[3][3] = CellState.White;
+    board[3][4] = CellState.Black;
+    board[4][3] = CellState.Black;
+    board[4][4] = CellState.White;
+
+    return board;
+  };
+
+  const [board, setBoard] = useState<CellState[][]>(initializeBoard);
 
   const handleCellClick = (rowIndex: number, cellIndex: number) => {
     setBoard((prevBoard) => {
