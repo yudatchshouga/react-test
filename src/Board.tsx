@@ -1,8 +1,8 @@
 import Cell from "./Cell";
-import CellState from "./CellState";
+import CellModel from "./models/CellModel";
 
 type BoardProps = {
-  board: CellState[][];
+  board: CellModel[][];
   onCellClick: (rowIndex: number, cellIndex: number) => void;
 };
 
@@ -14,7 +14,7 @@ const Board: React.FC<BoardProps> = ({ board, onCellClick }) => {
           {[...Array(8)].map((_, cellIndex) => (
             <Cell
               key={cellIndex}
-              state={board[rowIndex][cellIndex]}
+              cell={board[rowIndex][cellIndex]}
               onClick={() => onCellClick(rowIndex, cellIndex)}
             />
           ))}

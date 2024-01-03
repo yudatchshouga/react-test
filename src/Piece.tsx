@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import CellState from "./CellState";
+import PieceModel from "./models/PieceModel";
 
 interface PieceProps {
-  state: CellState;
+  piece: PieceModel;
 }
 
 const SPiece = styled.div<{ color: string }>`
@@ -12,8 +13,8 @@ const SPiece = styled.div<{ color: string }>`
   background-color: ${(props) => props.color};
 `;
 
-const Piece: React.FC<PieceProps> = ({ state }) => {
-  const color = state === CellState.Black ? "black" : "white";
+const Piece: React.FC<PieceProps> = ({ piece }) => {
+  const color = piece === PieceModel.Black ? "black" : "white";
   return <SPiece color={color} />;
 };
 

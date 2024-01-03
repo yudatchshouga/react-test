@@ -1,29 +1,32 @@
 import styled from "styled-components";
-import CellState from "./CellState";
 import Piece from "./Piece";
+import CellModel from "./models/CellModel";
+import PieceModel from "./models/PieceModel";
 
-const cellColor: string = "#29a83f";
+interface CellProps {
+  cell: CellModel;
+  onClick: () => void;
+}
+
 const cellSize: number = 70;
+const defaultColor: string = "#29a83f";
+const canPutColor: string = "lightgreen";
 
-const SCell = styled.div`
+const SCell = styled.div<{ color: string }>`
   width: ${cellSize}px;
   height: ${cellSize}px;
-  background-color: ${cellColor};
+  background-color: ${(props) => props.color};
   border: 1px solid black;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
-interface CellProps {
-  state: CellState;
-  onClick: () => void;
-}
-
-const Cell: React.FC<CellProps> = ({ state, onClick }) => {
+const Cell: React.FC<CellProps> = ({ cell, onClick }) => {
+  const color = cell.canPut ? canPutColor : defaultColor;
   return (
-    <SCell onClick={onClick}>
-      {state !== CellState.Empty && <Piece state={state} />}
+    <SCell onClick={onClick} color={color}>
+      {cell.piece !== PieceModel.None && <Piece piece={cell.piece} />}
     </SCell>
   );
 };
