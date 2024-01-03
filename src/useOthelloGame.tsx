@@ -1,6 +1,7 @@
 import { useState } from "react";
 import CellModel from "./models/CellModel";
 import PieceModel from "./models/PieceModel";
+import Positions from "./models/Positions";
 
 const initializeBoard = (): CellModel[][] => {
   const board = Array(8)
@@ -17,6 +18,7 @@ const initializeBoard = (): CellModel[][] => {
   board[4][4].piece = PieceModel.White;
 
   setCanPutToBoard(board, PieceModel.Black);
+  console.log(board);
 
   return board;
 };
@@ -65,21 +67,34 @@ const canPutToDirection = (
   let canPut = false;
   let dx = direction[0];
   let dy = direction[1];
+  let flippablePositions: Positions[] = [];
   if (cell.piece === PieceModel.None) {
     let foundOpponent = false;
     let x = cellIndex + dx;
     let y = rowIndex + dy;
 
     while (x >= 0 && x < board[0].length && y >= 0 && y < board.length) {
+      // 盤面の範囲内でループを続ける
+      // xとyは、現在調査中のセルの座標
       if (board[y][x].piece === getOpponent(currentPlayer)) {
+        // 現在のプレイヤーの対戦相手のコマが見つかった場合
+        // 例: 現在のプレイヤーが黒の場合、白のコマを見つけた状況
         foundOpponent = true;
+        flippablePositions.push(new Positions(x, y));
       } else if (board[y][x].piece === currentPlayer && foundOpponent) {
+        // 現在のプレイヤーのコマが見つかり、かつ対戦相手のコマを既に見つけていた場合
+        // これはコマを置くことができる状況を意味する
         canPut = true;
+        cell.setFlippablePositions(flippablePositions);
         break;
       } else {
+        // いずれの条件も満たさない場合、ループを終了
+        // 例: 空のセルに遭遇したり、盤面の端に達した場合
+        cell.setFlippablePositions([]);
         break;
       }
 
+      // 次のセルへ移動
       x += dx;
       y += dy;
     }

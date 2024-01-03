@@ -1,9 +1,10 @@
 import PieceModel from "./PieceModel";
+import Positions from "./Positions";
 
 class CellModel {
   piece: PieceModel;
   private canPut: boolean = false;
-  private flippablePositions: number[][] = [];
+  private flippablePositions: Positions[] = [];
 
   constructor(piece: PieceModel) {
     this.piece = piece;
@@ -20,14 +21,14 @@ class CellModel {
     this.canPut = canPut;
   }
 
-  getFlippablePositions(): number[][] {
+  getFlippablePositions(): Positions[] {
     if (!this.canPut) {
       return [];
     }
     return this.flippablePositions;
   }
 
-  setFlippablePositions(positions: number[][]): void {
+  setFlippablePositions(positions: Positions[]): void {
     this.flippablePositions = positions;
   }
 }
