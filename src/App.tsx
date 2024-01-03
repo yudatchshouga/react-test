@@ -1,6 +1,4 @@
-import { useState } from "react";
 import "./App.css";
-import styled from "styled-components";
 import Board from "./Board";
 
 const App = () => {
