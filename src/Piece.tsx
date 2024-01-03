@@ -1,6 +1,10 @@
 import styled from "styled-components";
 import CellState from "./CellState";
 
+interface PieceProps {
+  state: CellState;
+}
+
 const SPiece = styled.div<{ color: string }>`
   width: 50px;
   height: 50px;
@@ -8,7 +12,7 @@ const SPiece = styled.div<{ color: string }>`
   background-color: ${(props) => props.color};
 `;
 
-const Piece = ({ state }: { state: CellState }) => {
+const Piece: React.FC<PieceProps> = ({ state }) => {
   const color = state === CellState.Black ? "black" : "white";
   return <SPiece color={color} />;
 };

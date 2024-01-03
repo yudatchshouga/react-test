@@ -2,8 +2,8 @@ import styled from "styled-components";
 import CellState from "./CellState";
 import Piece from "./Piece";
 
-const cellColor = "#29a83f";
-const cellSize = 70;
+const cellColor: string = "#29a83f";
+const cellSize: number = 70;
 
 const SCell = styled.div`
   width: ${cellSize}px;
@@ -15,13 +15,12 @@ const SCell = styled.div`
   align-items: center;
 `;
 
-const Cell = ({
-  state,
-  onClick,
-}: {
+interface CellProps {
   state: CellState;
   onClick: () => void;
-}) => {
+}
+
+const Cell: React.FC<CellProps> = ({ state, onClick }) => {
   return (
     <SCell onClick={onClick}>
       {state !== CellState.Empty && <Piece state={state} />}

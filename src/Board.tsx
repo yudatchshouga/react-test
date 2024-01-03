@@ -2,8 +2,10 @@ import { useState } from "react";
 import Cell from "./Cell";
 import CellState from "./CellState";
 
-const Board = () => {
-  const [board, setBoard] = useState(() =>
+type BoardProps = {};
+
+const Board: React.FC<BoardProps> = () => {
+  const [board, setBoard] = useState<CellState[][]>(() =>
     Array(8)
       .fill(null)
       .map(() => Array(8).fill(CellState.Empty))
@@ -24,8 +26,6 @@ const Board = () => {
       return prevBoard;
     });
   };
-
-  console.log(board);
 
   return (
     <div>
