@@ -36,28 +36,26 @@ const checkPutableCell = (
   cellIndex: number
 ) => {
   let cell = board[rowIndex][cellIndex];
-  // セルが空でない場合、そこにはコマを置けない
-  if (cell.piece !== PieceModel.None) {
-    cell.canPut = false;
-    return;
-  }
+  let canPut = false;
 
-  // 右方向をチェック
-  let foundOpponent = false;
-  for (let j = cellIndex + 1; j < board[rowIndex].length; j++) {
-    if (board[rowIndex][j].piece === getOpponent(currentPlayer)) {
-      foundOpponent = true;
-    } else if (board[rowIndex][j].piece === currentPlayer && foundOpponent) {
-      // 対戦相手のコマの後に現在のプレイヤーのコマがある
-      cell.canPut = true;
-      return;
-    } else {
-      break;
+  // セルが空の場合のみ、置けるかどうかをチェック
+  if (cell.piece === PieceModel.None) {
+    // 右方向をチェック
+    let foundOpponent = false;
+    for (let j = cellIndex + 1; j < board[rowIndex].length; j++) {
+      if (board[rowIndex][j].piece === getOpponent(currentPlayer)) {
+        foundOpponent = true;
+      } else if (board[rowIndex][j].piece === currentPlayer && foundOpponent) {
+        // 対戦相手のコマの後に現在のプレイヤーのコマがある
+        canPut = true;
+        break;
+      } else {
+        break;
+      }
     }
   }
 
-  cell.canPut = false;
-  return;
+  cell.canPut = canPut; // 最終的な結果をセット
 };
 
 const getOpponent = (player: PieceModel): PieceModel => {
