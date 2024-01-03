@@ -17,8 +17,24 @@ const SPiece = styled.div`
   width: 50px;
   height: 50px;
   border-radius: 50%;
+`;
+
+const SBlackPiece = styled(SPiece)`
   background-color: black;
 `;
+
+const SWhitePiece = styled(SPiece)`
+  background-color: white;
+`;
+
+const renderPiece = (cell: string) => {
+  if (cell === "BLACK") {
+    return <SBlackPiece />;
+  } else if (cell === "WHITE") {
+    return <SWhitePiece />;
+  }
+  return null;
+};
 
 const Board = () => {
   const board = Array(8)
@@ -38,7 +54,7 @@ const Board = () => {
         <div key={rowIndex} style={{ display: "flex" }}>
           {[...Array(8)].map((_, cellIndex) => (
             <SCell key={cellIndex}>
-              <SPiece />
+              {renderPiece(board[rowIndex][cellIndex])}
             </SCell>
           ))}
         </div>
