@@ -14,22 +14,15 @@ const Game: React.FC<GameProps> = () => {
     new Player("Player2", PieceModel.White),
   ]);
 
-  const startPlayer = players.getStartPlayer();
-
-  const [game, setGame] = useState<GameModel>(new GameModel(8, startPlayer));
+  const [game, setGame] = useState<GameModel>(new GameModel(8, players));
 
   const onClickCell = (position: Position) => {
     setGame((prevGame) => {
-      if (prevGame.board.getCell(position).getCanPut()) {
+      if (prevGame.getCanPut(position)) {
         let game = prevGame.copy();
-        const currentPlayer = game.currentPlayer;
-        game.putPiece(position, currentPlayer.piece);
-
-        const nextPlayer = players.getNextPlayer(currentPlayer);
-        game.currentPlayer = nextPlayer;
-        game.board.setCanPutToBoard(nextPlayer);
-        game.board.setCanPutToPlayer(nextPlayer);
-
+        game.putPiece(position);
+        game.toNextPlayer();
+        game.setCanPutToBoard();
         return game;
       }
       return prevGame;

@@ -66,9 +66,6 @@ class BoardModel {
         this.setCanPutToCell(currentPlayer, position);
       }
     }
-  }
-
-  setCanPutToPlayer(currentPlayer: Player) {
     for (let y = 0; y < this.size; y++) {
       for (let x = 0; x < this.size; x++) {
         let position = new Position(x, y);
