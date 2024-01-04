@@ -2,6 +2,7 @@ import { DIRECTIONS } from "../constants/Directions";
 import CellModel from "./CellModel";
 import Direction from "./Direction";
 import PieceModel from "./PieceModel";
+import Player from "./Player";
 import Position from "./Position";
 
 class BoardModel {
@@ -22,12 +23,13 @@ class BoardModel {
 
   init() {
     const size = this.size;
+    const startPlayer = new Player("1P", PieceModel.Black);
     this.getCell(new Position(size / 2 - 1, size / 2 - 1)).piece =
       PieceModel.Black;
     this.getCell(new Position(size / 2 - 1, size / 2)).piece = PieceModel.White;
     this.getCell(new Position(size / 2, size / 2 - 1)).piece = PieceModel.White;
     this.getCell(new Position(size / 2, size / 2)).piece = PieceModel.Black;
-    this.setCanPutToBoard(PieceModel.Black);
+    this.setCanPutToBoard(startPlayer.piece);
   }
 
   getCells(): CellModel[][] {
@@ -55,18 +57,6 @@ class BoardModel {
       }
     }
     return board;
-  }
-
-  putPiece(position: Position, currentPlayer: PieceModel) {
-    const cell = this.getCell(position);
-    const flippablePositions = cell.getFlippablePositions();
-    if (flippablePositions.length === 0) {
-      return;
-    }
-    cell.piece = currentPlayer;
-    flippablePositions.map((position) => {
-      this.getCell(position).piece = currentPlayer;
-    });
   }
 
   setCanPutToBoard(currentPlayer: PieceModel) {
