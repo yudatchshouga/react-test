@@ -12,12 +12,13 @@ export const useOthelloGame = () => {
   const onClickCell = (position: Position) => {
     setGame((prevGame) => {
       if (prevGame.board.getCell(position).getCanPut()) {
-        let newGame = new GameModel(prevGame.board.size);
-        newGame.board = prevGame.board.copy();
-        newGame.putPiece(position, currentPlayer);
-        newGame.board.setCanPutToBoard(newGame.board.getOpponent(currentPlayer));
-        setCurrentPlayer(newGame.board.getOpponent(currentPlayer));
-        return newGame;
+        let game = prevGame.copy();
+        game.putPiece(position, currentPlayer);
+        // 次のプレイヤー
+        const nextPlayer = game.board.getOpponent(currentPlayer);
+        setCurrentPlayer(nextPlayer);
+        game.board.setCanPutToBoard(nextPlayer);
+        return game;
       }
       return prevGame;
     });

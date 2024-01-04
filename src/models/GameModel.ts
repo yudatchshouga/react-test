@@ -11,6 +11,13 @@ class GameModel {
     this.currentPlayer = PieceModel.Black;
   }
 
+  copy(): GameModel {
+    const game = new GameModel(this.board.size);
+    game.board = this.board.copy();
+    game.currentPlayer = this.currentPlayer;
+    return game;
+  }
+
   putPiece(position: Position, currentPlayer: PieceModel) {
     const cell = this.board.getCell(position);
     const flippablePositions = cell.getFlippablePositions();
