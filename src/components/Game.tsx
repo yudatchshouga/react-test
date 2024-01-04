@@ -10,6 +10,7 @@ const Game: React.FC<GameProps> = () => {
 
   const onClickCell = (position: Position) => {
     setGame((game) => {
+      // positionに駒を置けるかどうか
       if (game.getCanPut(position)) {
         // gameのコピーを作成
         let _game = game.copy();
