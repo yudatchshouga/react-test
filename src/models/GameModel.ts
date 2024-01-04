@@ -33,8 +33,9 @@ class GameModel {
     });
   }
 
-  setCanPutToBoard() {
-    this.board.setCanPutToBoard(this.currentPlayer);
+  setCanPutToCells() {
+    this.board.setCanPutToCells(this.currentPlayer);
+    this.board.setCanPutToPlayer(this.currentPlayer);
   }
 
   toNextPlayer() {

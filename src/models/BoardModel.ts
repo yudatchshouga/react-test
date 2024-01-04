@@ -29,11 +29,7 @@ class BoardModel {
     this.getCell(new Position(size / 2 - 1, size / 2)).piece = PieceModel.White;
     this.getCell(new Position(size / 2, size / 2 - 1)).piece = PieceModel.White;
     this.getCell(new Position(size / 2, size / 2)).piece = PieceModel.Black;
-    this.setCanPutToBoard(startPlayer);
-  }
-
-  getCells(): CellModel[][] {
-    return this.cells;
+    this.setCanPutToCells(startPlayer);
   }
 
   getCell(position: Position): CellModel {
@@ -59,13 +55,16 @@ class BoardModel {
     return board;
   }
 
-  setCanPutToBoard(currentPlayer: Player) {
+  setCanPutToCells(currentPlayer: Player) {
     for (let y = 0; y < this.size; y++) {
       for (let x = 0; x < this.size; x++) {
         let position = new Position(x, y);
         this.setCanPutToCell(currentPlayer, position);
       }
     }
+  }
+
+  setCanPutToPlayer(currentPlayer: Player) {
     for (let y = 0; y < this.size; y++) {
       for (let x = 0; x < this.size; x++) {
         let position = new Position(x, y);
@@ -115,9 +114,7 @@ class BoardModel {
       while (position.isVaild(this.size)) {
         // 盤面の範囲内でループを続ける
         // xとyは、現在調査中のセルの座標
-        if (
-          this.getCell(position).piece === this.getOpponent(currentPlayer.piece)
-        ) {
+        if (this.existsOtherPiece(position, currentPlayer)) {
           // 現在のプレイヤーの対戦相手のコマが見つかった場合
           // 例: 現在のプレイヤーが黒の場合、白のコマを見つけた状況
           foundOpponent = true;
@@ -142,8 +139,11 @@ class BoardModel {
     return [];
   };
 
-  getOpponent(player: PieceModel): PieceModel {
-    return player === PieceModel.Black ? PieceModel.White : PieceModel.Black;
+  existsOtherPiece(position: Position, currentPlayer: Player) {
+    return (
+      this.getCell(position).piece !== PieceModel.None &&
+      this.getCell(position).piece !== currentPlayer.piece
+    );
   }
 }
 
