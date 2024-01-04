@@ -42,6 +42,7 @@ const Game: React.FC<GameProps> = () => {
         Current Player: {game.currentPlayer.name}, canPut:
         {game.currentPlayer.canPut.toString()}
       </p>
+      {!game.currentPlayer.canPut && <p>GAMEOVER</p>}
       <Board board={game.board} onClickCell={onClickCell} />
     </div>
   );

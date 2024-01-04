@@ -1,20 +1,20 @@
 import BoardModel from "./BoardModel";
 import PieceModel from "./PieceModel";
+import Player from "./Player";
 import Position from "./Position";
 
 class GameModel {
   board: BoardModel;
-  currentPlayer: PieceModel;
+  currentPlayer: Player;
 
-  constructor(size: number) {
+  constructor(size: number, startPlayer: Player) {
     this.board = new BoardModel(size);
-    this.currentPlayer = PieceModel.Black;
+    this.currentPlayer = startPlayer;
   }
 
   copy(): GameModel {
-    const game = new GameModel(this.board.size);
+    const game = new GameModel(this.board.size, this.currentPlayer);
     game.board = this.board.copy();
-    game.currentPlayer = this.currentPlayer;
     return game;
   }
 

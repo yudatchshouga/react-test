@@ -29,7 +29,7 @@ class BoardModel {
     this.getCell(new Position(size / 2 - 1, size / 2)).piece = PieceModel.White;
     this.getCell(new Position(size / 2, size / 2 - 1)).piece = PieceModel.White;
     this.getCell(new Position(size / 2, size / 2)).piece = PieceModel.Black;
-    this.setCanPutToBoard(startPlayer.piece);
+    this.setCanPutToBoard(startPlayer);
   }
 
   getCells(): CellModel[][] {
@@ -59,7 +59,7 @@ class BoardModel {
     return board;
   }
 
-  setCanPutToBoard(currentPlayer: PieceModel) {
+  setCanPutToBoard(currentPlayer: Player) {
     for (let y = 0; y < this.size; y++) {
       for (let x = 0; x < this.size; x++) {
         let position = new Position(x, y);
@@ -68,7 +68,21 @@ class BoardModel {
     }
   }
 
-  setCanPutToCell(currentPlayer: PieceModel, position: Position) {
+  setCanPutToPlayer(currentPlayer: Player) {
+    for (let y = 0; y < this.size; y++) {
+      for (let x = 0; x < this.size; x++) {
+        let position = new Position(x, y);
+        let cell = this.getCell(position);
+        if (cell.getCanPut()) {
+          currentPlayer.canPut = true;
+          return;
+        }
+      }
+    }
+    currentPlayer.canPut = false;
+  }
+
+  setCanPutToCell(currentPlayer: Player, position: Position) {
     let cell = this.getCell(position);
     let allFlippablePositions: Position[] = [];
 
@@ -92,7 +106,7 @@ class BoardModel {
   }
 
   getFlippablePositionsInDirection = (
-    currentPlayer: PieceModel,
+    currentPlayer: Player,
     position: Position,
     direction: Direction
   ): Position[] => {
@@ -104,13 +118,15 @@ class BoardModel {
       while (position.isVaild(this.size)) {
         // 盤面の範囲内でループを続ける
         // xとyは、現在調査中のセルの座標
-        if (this.getCell(position).piece === this.getOpponent(currentPlayer)) {
+        if (
+          this.getCell(position).piece === this.getOpponent(currentPlayer.piece)
+        ) {
           // 現在のプレイヤーの対戦相手のコマが見つかった場合
           // 例: 現在のプレイヤーが黒の場合、白のコマを見つけた状況
           foundOpponent = true;
           flippablePositions.push(position);
         } else if (
-          this.getCell(position).piece === currentPlayer &&
+          this.getCell(position).piece === currentPlayer.piece &&
           foundOpponent
         ) {
           // 現在のプレイヤーのコマが見つかり、かつ対戦相手のコマを既に見つけていた場合
