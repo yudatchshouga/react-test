@@ -1,6 +1,6 @@
 import Cell from "./Cell";
-import BoardModel from "./models/BoardModel";
-import Position from "./models/Position";
+import BoardModel from "../models/BoardModel";
+import Position from "../models/Position";
 
 type BoardProps = {
   board: BoardModel;

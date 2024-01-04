@@ -1,7 +1,7 @@
 import { useState } from "react";
-import PieceModel from "./models/PieceModel";
-import Position from "./models/Position";
-import BoardModel from "./models/BoardModel";
+import PieceModel from "../models/PieceModel";
+import Position from "../models/Position";
+import BoardModel from "../models/BoardModel";
 
 export const useOthelloGame = () => {
   const [board, setBoard] = useState<BoardModel>(new BoardModel(8));

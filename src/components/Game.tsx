@@ -1,6 +1,6 @@
 import Board from "./Board";
-import PieceModel from "./models/PieceModel";
-import { useOthelloGame } from "./useOthelloGame";
+import PieceModel from "../models/PieceModel";
+import { useOthelloGame } from "../hooks/useOthelloGame";
 
 type GameProps = {};
 

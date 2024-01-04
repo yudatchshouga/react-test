@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import PieceModel from "./models/PieceModel";
+import PieceModel from "../models/PieceModel";
 
 interface PieceProps {
   piece: PieceModel;

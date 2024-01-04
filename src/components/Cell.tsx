@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Piece from "./Piece";
-import CellModel from "./models/CellModel";
-import PieceModel from "./models/PieceModel";
+import CellModel from "../models/CellModel";
+import PieceModel from "../models/PieceModel";
 
 interface CellProps {
   cell: CellModel;

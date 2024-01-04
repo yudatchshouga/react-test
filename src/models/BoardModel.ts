@@ -17,12 +17,16 @@ class BoardModel {
           .map(() => new CellModel(PieceModel.None))
       );
     this.size = size;
+    this.init();
+  }
+
+  init() {
+    const size = this.size;
     this.getCell(new Position(size / 2 - 1, size / 2 - 1)).piece =
       PieceModel.Black;
     this.getCell(new Position(size / 2 - 1, size / 2)).piece = PieceModel.White;
     this.getCell(new Position(size / 2, size / 2 - 1)).piece = PieceModel.White;
     this.getCell(new Position(size / 2, size / 2)).piece = PieceModel.Black;
-
     this.setCanPutToBoard(PieceModel.Black);
   }
 
