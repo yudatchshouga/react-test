@@ -14,7 +14,7 @@ class BoardModel {
       .map(() =>
         Array(size)
           .fill(null)
-          .map(() => new CellModel(PieceModel.None))
+          .map(() => new CellModel())
       );
     this.size = size;
     this.init();

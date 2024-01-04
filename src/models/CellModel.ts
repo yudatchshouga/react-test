@@ -6,8 +6,8 @@ class CellModel {
   private canPut: boolean = false;
   private flippablePositions: Position[] = [];
 
-  constructor(piece: PieceModel) {
-    this.piece = piece;
+  constructor(piece?: PieceModel) {
+    this.piece = piece || PieceModel.None;
   }
 
   getCanPut(): boolean {
