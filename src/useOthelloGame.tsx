@@ -2,25 +2,20 @@ import { useState } from "react";
 import PieceModel from "./models/PieceModel";
 import Position from "./models/Position";
 import BoardModel from "./models/BoardModel";
+import { DIRECTIONS } from "./constants/Directions";
+import Direction from "./models/Direction";
 
 const initializeBoard = (): BoardModel => {
   const board = new BoardModel(8);
-
-  board.getCell(new Position(3, 3)).piece = PieceModel.White;
-  board.getCell(new Position(3, 4)).piece = PieceModel.Black;
-  board.getCell(new Position(4, 3)).piece = PieceModel.Black;
-  board.getCell(new Position(4, 4)).piece = PieceModel.White;
-
   setCanPutToBoard(board, PieceModel.Black);
-  console.log(board.cells);
-
   return board;
 };
 
 const setCanPutToBoard = (board: BoardModel, currentPlayer: PieceModel) => {
-  for (let i = 0; i < board.size; i++) {
-    for (let j = 0; j < board.size; j++) {
-      setCanPutToCell(board, currentPlayer, i, j);
+  for (let y = 0; y < board.size; y++) {
+    for (let x = 0; x < board.size; x++) {
+      let position = new Position(x, y);
+      setCanPutToCell(board, currentPlayer, position);
     }
   }
 };
@@ -28,31 +23,17 @@ const setCanPutToBoard = (board: BoardModel, currentPlayer: PieceModel) => {
 const setCanPutToCell = (
   board: BoardModel,
   currentPlayer: PieceModel,
-  rowIndex: number,
-  cellIndex: number
+  position: Position
 ) => {
-  let cell = board.cells[rowIndex][cellIndex];
-
-  let directions = [
-    [1, 0],
-    [1, 1],
-    [0, 1],
-    [-1, 1],
-    [-1, 0],
-    [-1, -1],
-    [0, -1],
-    [1, -1],
-  ];
-
+  let cell = board.getCell(position);
   let allFlippablePositions: Position[] = [];
-
   let canPut = false;
-  directions.forEach((direction) => {
+
+  DIRECTIONS.forEach((direction) => {
     let flippablePositions = canPutToDirection(
       board,
       currentPlayer,
-      rowIndex,
-      cellIndex,
+      position,
       direction
     );
 
@@ -72,21 +53,14 @@ const setCanPutToCell = (
 const canPutToDirection = (
   board: BoardModel,
   currentPlayer: PieceModel,
-  rowIndex: number,
-  cellIndex: number,
-  direction: number[]
+  position: Position,
+  direction: Direction
 ): Position[] => {
-  let cell = board.cells[rowIndex][cellIndex];
-  let dx = direction[0];
-  let dy = direction[1];
+  let cell = board.getCell(position);
   let flippablePositions: Position[] = [];
   if (cell.piece === PieceModel.None) {
     let foundOpponent = false;
-    let x = cellIndex + dx;
-    let y = rowIndex + dy;
-
-    let position = new Position(x, y);
-
+    position = position.addDirection(direction);
     while (position.isVaild(board.size)) {
       // 盤面の範囲内でループを続ける
       // xとyは、現在調査中のセルの座標
@@ -108,7 +82,7 @@ const canPutToDirection = (
         break;
       }
       // 次のセルへ移動
-      position = new Position(position.x + dx, position.y + dy);
+      position = position.addDirection(direction);
     }
   }
 
@@ -125,11 +99,8 @@ export const useOthelloGame = () => {
     PieceModel.Black
   );
 
-  const handleCellClick = (rowIndex: number, cellIndex: number) => {
+  const onClickCell = (position: Position) => {
     setBoard((prevBoard) => {
-      let x = cellIndex;
-      let y = rowIndex;
-      let position = new Position(x, y);
       let selectedCell = prevBoard.getCell(position);
       if (selectedCell.getCanPut()) {
         let newBoard = prevBoard.copy();
@@ -143,5 +114,5 @@ export const useOthelloGame = () => {
     });
   };
 
-  return { board, currentPlayer, handleCellClick };
+  return { board, currentPlayer, onClickCell };
 };
