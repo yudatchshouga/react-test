@@ -6,6 +6,10 @@ class Players {
     this.players = players;
   }
 
+  copy(): Players {
+    return new Players(this.players.map((player) => player.copy()));
+  }
+
   getStartPlayer(): Player {
     return this.players[0];
   }

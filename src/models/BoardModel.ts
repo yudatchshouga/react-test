@@ -23,13 +23,11 @@ class BoardModel {
 
   init() {
     const size = this.size;
-    const startPlayer = new Player("1P", PieceModel.Black);
     this.getCell(new Position(size / 2 - 1, size / 2 - 1)).piece =
       PieceModel.Black;
     this.getCell(new Position(size / 2 - 1, size / 2)).piece = PieceModel.White;
     this.getCell(new Position(size / 2, size / 2 - 1)).piece = PieceModel.White;
     this.getCell(new Position(size / 2, size / 2)).piece = PieceModel.Black;
-    this.setCanPutToCells(startPlayer);
   }
 
   getCell(position: Position): CellModel {

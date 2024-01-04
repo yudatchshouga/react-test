@@ -1,4 +1,5 @@
 import BoardModel from "./BoardModel";
+import PieceModel from "./PieceModel";
 import Player from "./Player";
 import Players from "./Players";
 import Position from "./Position";
@@ -8,15 +9,27 @@ class GameModel {
   players: Players;
   currentPlayer: Player;
 
-  constructor(size: number, players: Players) {
-    this.board = new BoardModel(size);
-    this.players = players;
-    this.currentPlayer = players.getStartPlayer();
+  // ゲーム初期化
+  constructor() {
+    // プレイヤーの設定
+    this.players = new Players([
+      new Player("Player1", PieceModel.Black),
+      new Player("Player2", PieceModel.White),
+    ]);
+    // ボードを作成
+    this.board = new BoardModel(8);
+    // ボードに4つの駒を配置
+    this.board.init();
+    // 先攻プレイヤーの設定
+    this.currentPlayer = this.players.getStartPlayer();
+    // 先攻プレイヤーが駒を置けるかどうかのフラグを立てる
+    this.setCanPut();
   }
 
   copy(): GameModel {
-    const game = new GameModel(this.board.size, this.players);
+    const game = new GameModel();
     game.board = this.board.copy();
+    game.players = this.players;
     game.currentPlayer = this.currentPlayer;
     return game;
   }
@@ -33,7 +46,7 @@ class GameModel {
     });
   }
 
-  setCanPutToCells() {
+  setCanPut() {
     this.board.setCanPutToCells(this.currentPlayer);
     this.board.setCanPutToPlayer(this.currentPlayer);
   }

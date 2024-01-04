@@ -1,28 +1,24 @@
 import Board from "./Board";
-import PieceModel from "../models/PieceModel";
-import Player from "../models/Player";
 import GameModel from "../models/GameModel";
 import { useState } from "react";
 import Position from "../models/Position";
-import Players from "../models/Players";
 
 type GameProps = {};
 
 const Game: React.FC<GameProps> = () => {
-  const players: Players = new Players([
-    new Player("Player1", PieceModel.Black),
-    new Player("Player2", PieceModel.White),
-  ]);
-
-  const [game, setGame] = useState<GameModel>(new GameModel(8, players));
+  const [game, setGame] = useState<GameModel>(new GameModel());
 
   const onClickCell = (position: Position) => {
     setGame((game) => {
       if (game.getCanPut(position)) {
+        // gameのコピーを作成
         let _game = game.copy();
+        // 駒を置いて、相手の駒をひっくり返す
         _game.putPiece(position);
+        // 次のプレイヤーに交代
         _game.toNextPlayer();
-        _game.setCanPutToCells();
+        // 駒を置けるかどうかのフラグを立てる
+        _game.setCanPut();
         return _game;
       }
       return game;
