@@ -1,12 +1,28 @@
 import Board from "./Board";
 import GameModel from "../models/GameModel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Position from "../models/Position";
 
 type GameProps = {};
 
 const Game: React.FC<GameProps> = () => {
   const [game, setGame] = useState<GameModel>(new GameModel());
+
+  useEffect(() => {
+    if (!game.currentPlayer.canPut) {
+      const timer = setTimeout(() => {
+        setGame((prevGame) => {
+          let _game = prevGame.copy();
+          _game.toNextPlayer();
+          _game.setCanPut();
+          _game.setIsOver();
+          return _game;
+        });
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [game.currentPlayer.canPut]);
 
   const onClickCell = (position: Position) => {
     setGame((game) => {
@@ -32,7 +48,8 @@ const Game: React.FC<GameProps> = () => {
         Current Player: {game.currentPlayer.name}, canPut:
         {game.currentPlayer.canPut.toString()}
       </p>
-      {!game.currentPlayer.canPut && <p>GAMEOVER</p>}
+      {!game.currentPlayer.canPut && <p>PASS</p>}
+      {game.isOver && <p>GAME OVER</p>}
       <Board board={game.board} onClickCell={onClickCell} />
     </div>
   );

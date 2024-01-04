@@ -1,4 +1,5 @@
 import PieceModel from "./PieceModel";
+import Player from "./Player";
 import Position from "./Position";
 
 class CellModel {
@@ -28,6 +29,10 @@ class CellModel {
 
   setReversibles(reversibles: Position[]): void {
     this.reversibles = reversibles;
+  }
+
+  setPlayer(player: Player) {
+    this.piece = player.piece;
   }
 }
 

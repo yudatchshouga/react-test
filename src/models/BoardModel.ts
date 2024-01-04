@@ -1,8 +1,4 @@
-import { DIRECTIONS } from "../constants/Directions";
 import CellModel from "./CellModel";
-import Direction from "./Direction";
-import PieceModel from "./PieceModel";
-import Player from "./Player";
 import Position from "./Position";
 
 class BoardModel {
@@ -18,16 +14,6 @@ class BoardModel {
           .map(() => new CellModel())
       );
     this.size = size;
-    this.init();
-  }
-
-  init() {
-    const size = this.size;
-    this.getCell(new Position(size / 2 - 1, size / 2 - 1)).piece =
-      PieceModel.Black;
-    this.getCell(new Position(size / 2 - 1, size / 2)).piece = PieceModel.White;
-    this.getCell(new Position(size / 2, size / 2 - 1)).piece = PieceModel.White;
-    this.getCell(new Position(size / 2, size / 2)).piece = PieceModel.Black;
   }
 
   getCell(position: Position): CellModel {
