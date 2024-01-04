@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import CellState from "./CellState";
 import PieceModel from "./models/PieceModel";
 
 interface PieceProps {

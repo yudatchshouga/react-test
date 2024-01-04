@@ -12,7 +12,7 @@ const Game: React.FC<GameProps> = () => {
       <p>
         Current Player: {currentPlayer === PieceModel.Black ? "Black" : "White"}
       </p>
-      <Board board={board} onCellClick={handleCellClick} />
+      <Board board={board.cells} onCellClick={handleCellClick} />
     </div>
   );
 };

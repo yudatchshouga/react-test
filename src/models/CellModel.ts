@@ -1,10 +1,10 @@
 import PieceModel from "./PieceModel";
-import Positions from "./Positions";
+import Position from "./Position";
 
 class CellModel {
   piece: PieceModel;
   private canPut: boolean = false;
-  private flippablePositions: Positions[] = [];
+  private flippablePositions: Position[] = [];
 
   constructor(piece: PieceModel) {
     this.piece = piece;
@@ -21,15 +21,23 @@ class CellModel {
     this.canPut = canPut;
   }
 
-  getFlippablePositions(): Positions[] {
+  getFlippablePositions(): Position[] {
     if (!this.canPut) {
       return [];
     }
     return this.flippablePositions;
   }
 
-  setFlippablePositions(positions: Positions[]): void {
+  setFlippablePositions(positions: Position[]): void {
     this.flippablePositions = positions;
+  }
+
+  // コピーメソッド
+  copy(): CellModel {
+    const cell = new CellModel(this.piece);
+    cell.canPut = this.canPut;
+    cell.flippablePositions = this.flippablePositions;
+    return cell;
   }
 }
 
