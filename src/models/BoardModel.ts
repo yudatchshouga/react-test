@@ -81,10 +81,9 @@ class BoardModel {
   setCanPutToCell(currentPlayer: PieceModel, position: Position) {
     let cell = this.getCell(position);
     let allFlippablePositions: Position[] = [];
-    let canPut = false;
 
     DIRECTIONS.forEach((direction) => {
-      let flippablePositions = this.canPutToDirection(
+      let flippablePositions = this.getFlippablePositionsInDirection(
         currentPlayer,
         position,
         direction
@@ -92,18 +91,17 @@ class BoardModel {
 
       if (flippablePositions.length > 0) {
         allFlippablePositions.push(...flippablePositions);
-        canPut = true; // 少なくとも一つの方向でコマを置くことができる
       }
     });
 
+    const canPut = allFlippablePositions.length > 0;
     cell.setCanPut(canPut);
     if (canPut) {
       cell.setFlippablePositions(allFlippablePositions);
-      console.log(allFlippablePositions);
     }
   }
 
-  canPutToDirection = (
+  getFlippablePositionsInDirection = (
     currentPlayer: PieceModel,
     position: Position,
     direction: Direction

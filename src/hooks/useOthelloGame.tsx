@@ -17,7 +17,6 @@ export const useOthelloGame = () => {
         newBoard.putPiece(position, currentPlayer);
         newBoard.setCanPutToBoard(newBoard.getOpponent(currentPlayer));
         setCurrentPlayer(newBoard.getOpponent(currentPlayer));
-        console.log(newBoard.cells);
         return newBoard;
       }
       return prevBoard;
