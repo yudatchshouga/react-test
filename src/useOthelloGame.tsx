@@ -44,10 +44,29 @@ const setCanPutToCell = (
     [1, -1],
   ];
 
-  let canPut = directions.some((direction) =>
-    canPutToDirection(board, currentPlayer, rowIndex, cellIndex, direction)
-  );
+  let allFlippablePositions: Position[] = [];
+
+  let canPut = false;
+  directions.forEach((direction) => {
+    let flippablePositions = canPutToDirection(
+      board,
+      currentPlayer,
+      rowIndex,
+      cellIndex,
+      direction
+    );
+
+    if (flippablePositions.length > 0) {
+      allFlippablePositions.push(...flippablePositions);
+      canPut = true; // 少なくとも一つの方向でコマを置くことができる
+    }
+  });
+
   cell.setCanPut(canPut);
+  if (canPut) {
+    cell.setFlippablePositions(allFlippablePositions);
+    console.log(allFlippablePositions);
+  }
 };
 
 const canPutToDirection = (
@@ -56,9 +75,8 @@ const canPutToDirection = (
   rowIndex: number,
   cellIndex: number,
   direction: number[]
-): boolean => {
+): Position[] => {
   let cell = board.cells[rowIndex][cellIndex];
-  let canPut = false;
   let dx = direction[0];
   let dy = direction[1];
   let flippablePositions: Position[] = [];
@@ -76,29 +94,25 @@ const canPutToDirection = (
         // 現在のプレイヤーの対戦相手のコマが見つかった場合
         // 例: 現在のプレイヤーが黒の場合、白のコマを見つけた状況
         foundOpponent = true;
-        flippablePositions.push(new Position(x, y));
+        flippablePositions.push(position);
       } else if (
         board.getCell(position).piece === currentPlayer &&
         foundOpponent
       ) {
         // 現在のプレイヤーのコマが見つかり、かつ対戦相手のコマを既に見つけていた場合
         // これはコマを置くことができる状況を意味する
-        canPut = true;
-        cell.setFlippablePositions(flippablePositions);
-        break;
+        return flippablePositions;
       } else {
         // いずれの条件も満たさない場合、ループを終了
         // 例: 空のセルに遭遇したり、盤面の端に達した場合
-        cell.setFlippablePositions([]);
         break;
       }
-
       // 次のセルへ移動
       position = new Position(position.x + dx, position.y + dy);
     }
   }
 
-  return canPut;
+  return [];
 };
 
 const getOpponent = (player: PieceModel): PieceModel => {
@@ -121,6 +135,8 @@ export const useOthelloGame = () => {
         let newBoard = prevBoard.copy();
         newBoard.putPiece(position, currentPlayer);
         setCanPutToBoard(newBoard, getOpponent(currentPlayer));
+        setCurrentPlayer(getOpponent(currentPlayer));
+        console.log(newBoard.cells);
         return newBoard;
       }
       return prevBoard;
