@@ -3,41 +3,31 @@ import Position from "./Position";
 
 class CellModel {
   piece: PieceModel;
-  private canPut: boolean = false;
-  private flippablePositions: Position[] = [];
+  private reversibles: Position[] = [];
 
   constructor(piece?: PieceModel) {
     this.piece = piece || PieceModel.None;
+  }
+
+  copy(): CellModel {
+    const cell = new CellModel(this.piece);
+    cell.reversibles = this.reversibles;
+    return cell;
   }
 
   getCanPut(): boolean {
     if (this.piece !== PieceModel.None) {
       return false;
     }
-    return this.canPut;
+    return this.reversibles.length > 0;
   }
 
-  setCanPut(canPut: boolean): void {
-    this.canPut = canPut;
+  getReversibles(): Position[] {
+    return this.reversibles;
   }
 
-  getFlippablePositions(): Position[] {
-    if (!this.canPut) {
-      return [];
-    }
-    return this.flippablePositions;
-  }
-
-  setFlippablePositions(positions: Position[]): void {
-    this.flippablePositions = positions;
-  }
-
-  // コピーメソッド
-  copy(): CellModel {
-    const cell = new CellModel(this.piece);
-    cell.canPut = this.canPut;
-    cell.flippablePositions = this.flippablePositions;
-    return cell;
+  setReversibles(reversibles: Position[]): void {
+    this.reversibles = reversibles;
   }
 }
 
