@@ -1,5 +1,7 @@
 type CellProps = {
   content: string;
+  onClick: () => void;
+  puttable: boolean;
 };
 
 const Cell: React.FC<CellProps> = (props) => {
@@ -12,7 +14,9 @@ const Cell: React.FC<CellProps> = (props) => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: props.puttable ? "green" : "white",
       }}
+      onClick={props.onClick}
     >
       {props.content}
     </div>
