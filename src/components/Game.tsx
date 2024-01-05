@@ -1,22 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Cell from "./Cell";
 
 type GameProps = {};
 
-const initBoard: string[][] = [
-  ["", "", "", ""],
-  ["", "b", "w", ""],
-  ["", "w", "b", ""],
-  ["", "", "", ""],
-];
+const size = 8;
 
-const initPutables: boolean[][] = [
-  [false, false, true, false],
-  [false, false, false, true],
-  [true, false, false, false],
-  [false, true, false, false],
-];
+// 盤面の初期化
+const initBoard: string[][] = Array(size)
+  .fill("")
+  .map(() => Array(size).fill(""));
+initBoard[size / 2 - 1][size / 2 - 1] = "b";
+initBoard[size / 2][size / 2] = "b";
+initBoard[size / 2 - 1][size / 2] = "w";
+initBoard[size / 2][size / 2 - 1] = "w";
 
+// 置ける場所の初期化
+const initPutables: boolean[][] = Array(size)
+  .fill(false)
+  .map(() => Array(size).fill(false));
+
+// プレイヤーの初期化
 const initPlayer: string = "b";
 
 const Game: React.FC<GameProps> = () => {
@@ -42,9 +45,9 @@ const Game: React.FC<GameProps> = () => {
             // 白の駒が続く限り、セルを進める
             while (
               nx >= 0 &&
-              nx < 4 &&
+              nx < size &&
               ny >= 0 &&
-              ny < 4 &&
+              ny < size &&
               newBoard[ny][nx] === (player === "b" ? "w" : "b")
             ) {
               nx += i;
@@ -53,9 +56,9 @@ const Game: React.FC<GameProps> = () => {
             // セルが盤面内にあり、黒の駒がある場合
             if (
               nx >= 0 &&
-              nx < 4 &&
+              nx < size &&
               ny >= 0 &&
-              ny < 4 &&
+              ny < size &&
               newBoard[ny][nx] === player
             ) {
               // 黒の駒に戻るまで、セルを戻す
@@ -72,63 +75,65 @@ const Game: React.FC<GameProps> = () => {
         }
         return newBoard;
       });
-      putables[y][x] = false;
       // ターン交代
       setPlayer((prevPlayer) => (prevPlayer === "b" ? "w" : "b"));
-      console.log("player", player);
+    }
+  };
+
+  // プレイヤー交代したら置ける場所を更新する
+  useEffect(() => {
+    // 置ける場所を探す
+    setPutables((prevPutables) => {
+      const newPutables: boolean[][] = [...prevPutables];
+      // 盤面を初期化
+      for (let i = 0; i < size; i++) {
+        newPutables[i] = [false, false, false, false];
+      }
       // 置ける場所を探す
-      setPutables((prevPutables) => {
-        const newPutables: boolean[][] = [...prevPutables];
-        // 盤面を初期化
-        for (let i = 0; i < 4; i++) {
-          newPutables[i] = [false, false, false, false];
-        }
-        // 置ける場所を探す
-        for (let i = 0; i < 4; i++) {
-          for (let j = 0; j < 4; j++) {
-            // 既に駒が置かれている場合は無視する
-            if (board[i][j] !== "") continue;
-            // 各方向に対して処理を行う
-            for (let k = -1; k <= 1; k++) {
-              for (let l = -1; l <= 1; l++) {
-                // 自分自身の方向は無視する
-                if (k === 0 && l === 0) continue;
-                // 次に調べるセルの座標
-                let nx = j + k;
-                let ny = i + l;
+      for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+          // 既に駒が置かれている場合は無視する
+          if (board[i][j] !== "") continue;
+          // 各方向に対して処理を行う
+          for (let k = -1; k <= 1; k++) {
+            for (let l = -1; l <= 1; l++) {
+              // 自分自身の方向は無視する
+              if (k === 0 && l === 0) continue;
+              // 次に調べるセルの座標
+              let nx = j + k;
+              let ny = i + l;
+              // 盤面外の場合は無視する
+              if (nx < 0 || nx >= size || ny < 0 || ny >= size) continue;
+              // 隣のセルが相手の駒でない場合は無視する
+              if (board[ny][nx] !== (player === "b" ? "w" : "b")) continue;
+              // 隣のセルが相手の駒の場合、さらにその先を調べる
+              while (true) {
+                nx += k;
+                ny += l;
                 // 盤面外の場合は無視する
-                if (nx < 0 || nx >= 4 || ny < 0 || ny >= 4) continue;
-                // 隣のセルが相手の駒でない場合は無視する
-                if (board[ny][nx] !== (player === "b" ? "w" : "b")) continue;
-                // 隣のセルが相手の駒の場合、さらにその先を調べる
-                while (true) {
-                  nx += k;
-                  ny += l;
-                  // 盤面外の場合は無視する
-                  if (nx < 0 || nx >= 4 || ny < 0 || ny >= 4) break;
-                  // 隣のセルが空白の場合は無視する
-                  if (board[ny][nx] === "") break;
-                  // 隣のセルが自分の駒の場合、置ける場所としてマークする
-                  if (board[ny][nx] === player) {
-                    newPutables[i][j] = true;
-                    break;
-                  }
+                if (nx < 0 || nx >= size || ny < 0 || ny >= size) break;
+                // 隣のセルが空白の場合は無視する
+                if (board[ny][nx] === "") break;
+                // 隣のセルが自分の駒の場合、置ける場所としてマークする
+                if (board[ny][nx] === player) {
+                  newPutables[i][j] = true;
+                  break;
                 }
               }
             }
           }
         }
-        return newPutables;
-      });
-    }
-  };
+      }
+      return newPutables;
+    });
+  }, [player]);
 
   return (
     <div>
       <div>現在のプレイヤー: {player}</div>
-      {[...Array(4)].map((_, y) => (
+      {[...Array(size)].map((_, y) => (
         <div style={{ display: "flex" }} key={y}>
-          {[...Array(4)].map((_, x) => (
+          {[...Array(size)].map((_, x) => (
             <Cell
               key={x}
               content={board[y][x]}
