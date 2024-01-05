@@ -27,15 +27,19 @@ const Game: React.FC<GameProps> = () => {
   const onClickCell = (position: Position) => {
     setGame((game) => {
       // positionに駒を置けるかどうか
-      if (game.getCanPut(position)) {
+      if (game.canPut(position)) {
         // gameのコピーを作成
         let _game = game.copy();
+        // console.log("copy done");
         // 駒を置いて、相手の駒をひっくり返す
         _game.putPiece(position);
+        console.log("put done");
         // 次のプレイヤーに交代
         _game.toNextPlayer();
+        // console.log("next done");
         // 駒を置けるかどうかのフラグを立てる
         _game.setCanPut();
+        // console.log("canPut done");
         return _game;
       }
       return game;

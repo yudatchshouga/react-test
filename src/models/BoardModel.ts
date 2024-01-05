@@ -1,8 +1,7 @@
-import CellModel from "./CellModel";
 import Position from "./Position";
 
 class BoardModel {
-  cells: CellModel[][];
+  cells: string[][];
   size: number;
 
   constructor(size: number) {
@@ -11,12 +10,12 @@ class BoardModel {
       .map(() =>
         Array(size)
           .fill(null)
-          .map(() => new CellModel())
+          .map(() => "None")
       );
     this.size = size;
   }
 
-  getCell(position: Position): CellModel {
+  getCell(position: Position): string {
     if (
       position.x < 0 ||
       position.x >= this.cells.length ||
@@ -33,7 +32,7 @@ class BoardModel {
     const board = new BoardModel(this.size);
     for (let y = 0; y < this.size; y++) {
       for (let x = 0; x < this.size; x++) {
-        board.cells[y][x] = this.cells[y][x].copy();
+        board.cells[y][x] = this.cells[y][x];
       }
     }
     return board;

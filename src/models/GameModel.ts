@@ -1,7 +1,6 @@
 import { DIRECTIONS } from "../constants/Directions";
 import BoardModel from "./BoardModel";
 import Direction from "./Direction";
-import PieceModel from "./PieceModel";
 import Player from "./Player";
 import Players from "./Players";
 import Position from "./Position";
@@ -17,8 +16,8 @@ class GameModel {
   constructor() {
     // プレイヤーの設定
     this.players = new Players([
-      new Player("Player1", PieceModel.Black),
-      new Player("Player2", PieceModel.White),
+      new Player("Player1", "Black"),
+      new Player("Player2", "White"),
     ]);
     // ボードを作成
     this.board = new BoardModel(this.size);
@@ -39,38 +38,50 @@ class GameModel {
   }
 
   init() {
-    const size = this.size;
-    this.board.getCell(new Position(size / 2 - 1, size / 2 - 1)).piece =
-      this.players.players[0].piece;
-    this.board.getCell(new Position(size / 2 - 1, size / 2)).piece =
-      this.players.players[1].piece;
-    this.board.getCell(new Position(size / 2, size / 2 - 1)).piece =
-      this.players.players[1].piece;
-    this.board.getCell(new Position(size / 2, size / 2)).piece =
-      this.players.players[0].piece;
+    this.board.cells[3][3] = "Black";
+    this.board.cells[3][4] = "White";
+    this.board.cells[4][3] = "White";
+    this.board.cells[4][4] = "Black";
   }
 
   // 駒を置いて、相手の駒をひっくり返す
   putPiece(position: Position) {
     // 自分の駒を置く場所を取得
     const cell = this.board.getCell(position);
+    console.log(cell);
     // 駒を置く
-    cell.setPlayer(this.currentPlayer);
-    // ひっくり返せる駒の位置を取得
-    const reversibles = cell.getReversibles();
+    this.board.cells[position.y][position.x] = this.currentPlayer.piece;
     // 駒をひっくり返す
-    reversibles.map((position) => {
-      const _cell = this.board.getCell(position);
-      _cell.setPlayer(this.currentPlayer);
+    this.reversePieces(position);
+  }
+
+  // 駒をひっくり返す
+  reversePieces(position: Position) {
+    // 8方向の駒をひっくり返す
+    DIRECTIONS.forEach((direction) => {
+      this.reversePiecesInDirection(position, direction);
     });
+  }
+
+  // direction方向の駒をひっくり返す
+  reversePiecesInDirection(position: Position, direction: Direction) {
+    // direction方向のひっくり返せる駒を取得
+    const reversibles = this.getReversibles(position, direction);
+    // ひっくり返せる駒をひっくり返す
+    for (let i = 0; i < reversibles.length; i++) {
+      this.reversePiece(reversibles[i]);
+    }
+  }
+
+  // 駒をひっくり返す
+  reversePiece(position: Position) {
+    this.board.cells[position.y][position.x] = this.currentPlayer.piece;
   }
 
   // 駒を置けるかどうかのフラグを立てる
   setCanPut() {
     // 駒を置けるかどうかのフラグをセルに立てる
     this.setCanPutToCells();
-    // 駒を置けるかどうかのフラグをプレイヤーに立てる
-    this.setCanPutToPlayer();
   }
 
   // 駒を置けるかどうかのフラグをセルに立てる
@@ -78,25 +89,19 @@ class GameModel {
     for (let y = 0; y < this.size; y++) {
       for (let x = 0; x < this.size; x++) {
         let position = new Position(x, y);
-        // 8方向に対してひっくり返せる駒の位置を取得し配列に格納
-        let allReversibles: Position[] = [];
-        DIRECTIONS.forEach((direction) => {
-          let reversibles = this.getReversibles(position, direction);
-          allReversibles.push(...reversibles);
-        });
-        // ひっくり返せる駒の位置を追加
-        this.board.getCell(position).setReversibles(allReversibles);
       }
     }
   }
 
   getReversibles = (position: Position, direction: Direction): Position[] => {
+    console.log("getReversibles");
     let cell = this.board.getCell(position);
     let reversibles: Position[] = [];
-    if (cell.piece === PieceModel.None) {
+    if (cell === "None") {
       let foundOpponent = false;
       position = position.addDirection(direction);
       while (position.isVaild(this.size)) {
+        console.log("loop");
         // 盤面の範囲内でループを続ける
         // xとyは、現在調査中のセルの座標
         if (this.existsOtherPiece(position)) {
@@ -105,7 +110,7 @@ class GameModel {
           foundOpponent = true;
           reversibles.push(position);
         } else if (
-          this.board.getCell(position).piece === this.currentPlayer.piece &&
+          this.board.getCell(position) === this.currentPlayer.piece &&
           foundOpponent
         ) {
           // 現在のプレイヤーのコマが見つかり、かつ対戦相手のコマを既に見つけていた場合
@@ -127,25 +132,12 @@ class GameModel {
   // 現在のプレイヤー以外の駒があるかどうか
   existsOtherPiece(position: Position) {
     return (
-      this.board.getCell(position).piece !== PieceModel.None &&
-      this.board.getCell(position).piece !== this.currentPlayer.piece
+      this.board.getCell(position) !== "None" &&
+      this.board.getCell(position) !== this.currentPlayer.piece
     );
   }
 
   // 駒を置けるかどうかのフラグをプレイヤーに立てる
-  setCanPutToPlayer() {
-    for (let y = 0; y < this.size; y++) {
-      for (let x = 0; x < this.size; x++) {
-        let position = new Position(x, y);
-        let cell = this.board.getCell(position);
-        if (cell.getCanPut()) {
-          this.currentPlayer.canPut = true;
-          return;
-        }
-      }
-    }
-    this.currentPlayer.canPut = false;
-  }
 
   // 次のプレイヤーに交代
   toNextPlayer() {
@@ -153,8 +145,8 @@ class GameModel {
   }
 
   // positionに駒を置けるかどうか
-  getCanPut(position: Position): boolean {
-    return this.board.getCell(position).getCanPut();
+  canPut(position: Position): boolean {
+    return this.board.getCell(position) === "None";
   }
 
   setIsOver() {

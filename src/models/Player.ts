@@ -1,11 +1,9 @@
-import PieceModel from "./PieceModel";
-
 class Player {
   name: string;
-  piece: PieceModel;
+  piece: string;
   canPut: boolean = true;
 
-  constructor(name: string, piece: PieceModel) {
+  constructor(name: string, piece: string) {
     this.name = name;
     this.piece = piece;
   }

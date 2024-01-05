@@ -1,10 +1,7 @@
 import styled from "styled-components";
-import Piece from "./Piece";
-import CellModel from "../models/CellModel";
-import PieceModel from "../models/PieceModel";
 
 interface CellProps {
-  cell: CellModel;
+  cell: string;
   onClick: () => void;
 }
 
@@ -23,10 +20,10 @@ const SCell = styled.div<{ color: string }>`
 `;
 
 const Cell: React.FC<CellProps> = ({ cell, onClick }) => {
-  const color = cell.getCanPut() ? canPutColor : defaultColor;
+  const color = cell === "None" ? canPutColor : defaultColor;
   return (
     <SCell onClick={onClick} color={color}>
-      {cell.piece !== PieceModel.None && <Piece piece={cell.piece} />}
+      {cell}
     </SCell>
   );
 };
