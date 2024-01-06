@@ -16,8 +16,8 @@ initBoard[size / 2][size / 2 - 1] = "w";
 
 // 置ける場所の初期化
 const initPutables: boolean[][] = Array(size)
-  .fill(false)
-  .map(() => Array(size).fill(false));
+  .fill(true)
+  .map(() => Array(size).fill(true));
 
 // プレイヤーの初期化
 const initPlayer: string = "b";
@@ -26,6 +26,7 @@ const Game: React.FC<GameProps> = () => {
   const [board, setBoard] = useState<string[][]>(initBoard);
   const [putables, setPutables] = useState<boolean[][]>(initPutables);
   const [player, setPlayer] = useState<string>(initPlayer);
+  const [gameStatus, setGameStatus] = useState<string>("playing");
 
   const onClickCell = (y: number, x: number) => {
     if (putables[y][x]) {
@@ -95,15 +96,18 @@ const Game: React.FC<GameProps> = () => {
       putables.every((row) => row.every((putable) => !putable)) &&
       nextPutables.every((row) => row.every((putable) => !putable))
     ) {
-      console.log("game over");
+      setGameStatus("gameover");
       return;
     }
 
     // パス判定
     if (putables.every((row) => row.every((putable) => !putable))) {
-      console.log("pass");
-      // ターン交代
-      setPlayer((prevPlayer) => (prevPlayer === "b" ? "w" : "b"));
+      setGameStatus("pass");
+      setTimeout(() => {
+        // ターン交代
+        setPlayer((prevPlayer) => (prevPlayer === "b" ? "w" : "b"));
+        setGameStatus("playing");
+      }, 1000);
     }
   }, [putables]);
 
@@ -157,7 +161,9 @@ const Game: React.FC<GameProps> = () => {
 
   return (
     <div>
-      <div>現在のプレイヤー: {player}</div>
+      {gameStatus === "playing" && <div>現在のプレイヤー: {player}</div>}
+      {gameStatus === "pass" && <div>パス</div>}
+      {gameStatus === "gameover" && <div>ゲームオーバー</div>}
       {[...Array(size)].map((_, y) => (
         <div style={{ display: "flex" }} key={y}>
           {[...Array(size)].map((_, x) => (
