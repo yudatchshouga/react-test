@@ -9,10 +9,10 @@ const size = 4;
 const initBoard: string[][] = Array(size)
   .fill("")
   .map(() => Array(size).fill(""));
-initBoard[size / 2 - 1][size / 2 - 1] = "b";
-initBoard[size / 2][size / 2] = "b";
-initBoard[size / 2 - 1][size / 2] = "w";
-initBoard[size / 2][size / 2 - 1] = "w";
+initBoard[size / 2 - 1][size / 2 - 1] = "⚫︎";
+initBoard[size / 2][size / 2] = "⚫︎";
+initBoard[size / 2 - 1][size / 2] = "⚪︎";
+initBoard[size / 2][size / 2 - 1] = "⚪︎";
 
 // 置ける場所の初期化
 const initPutables: boolean[][] = Array(size)
@@ -20,7 +20,7 @@ const initPutables: boolean[][] = Array(size)
   .map(() => Array(size).fill(true));
 
 // プレイヤーの初期化
-const initPlayer: string = "b";
+const initPlayer: string = "⚫︎";
 
 const Game: React.FC<GameProps> = () => {
   const [board, setBoard] = useState<string[][]>(initBoard);
@@ -49,7 +49,7 @@ const Game: React.FC<GameProps> = () => {
               nx < size &&
               ny >= 0 &&
               ny < size &&
-              newBoard[ny][nx] === (player === "b" ? "w" : "b")
+              newBoard[ny][nx] === (player === "⚫︎" ? "⚪︎" : "⚫︎")
             ) {
               nx += i;
               ny += j;
@@ -77,7 +77,7 @@ const Game: React.FC<GameProps> = () => {
         return newBoard;
       });
       // ターン交代
-      setPlayer((prevPlayer) => (prevPlayer === "b" ? "w" : "b"));
+      setPlayer((prevPlayer) => (prevPlayer === "⚫︎" ? "⚪︎" : "⚫︎"));
     }
   };
 
@@ -90,7 +90,7 @@ const Game: React.FC<GameProps> = () => {
   // putablesが全てfalseだったら
   useEffect(() => {
     // ゲームオーバー判定
-    const nextPlayer = player === "b" ? "w" : "b";
+    const nextPlayer = player === "⚫︎" ? "⚪︎" : "⚫︎";
     const nextPutables = calculatePutables(board, nextPlayer);
     if (
       putables.every((row) => row.every((putable) => !putable)) &&
@@ -105,7 +105,7 @@ const Game: React.FC<GameProps> = () => {
       setGameStatus("pass");
       setTimeout(() => {
         // ターン交代
-        setPlayer((prevPlayer) => (prevPlayer === "b" ? "w" : "b"));
+        setPlayer((prevPlayer) => (prevPlayer === "⚫︎" ? "⚪︎" : "⚫︎"));
         setGameStatus("playing");
       }, 1000);
     }
@@ -137,7 +137,7 @@ const Game: React.FC<GameProps> = () => {
             // 盤面外の場合は無視する
             if (nx < 0 || nx >= size || ny < 0 || ny >= size) continue;
             // 隣のセルが相手の駒でない場合は無視する
-            if (board[ny][nx] !== (player === "b" ? "w" : "b")) continue;
+            if (board[ny][nx] !== (player === "⚫︎" ? "⚪︎" : "⚫︎")) continue;
             // 隣のセルが相手の駒の場合、さらにその先を調べる
             while (true) {
               nx += k;
